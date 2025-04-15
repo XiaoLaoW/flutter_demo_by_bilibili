@@ -1,4 +1,4 @@
-import 'package:demo_by_bilibili/pages/home_page.dart';
+import 'package:demo_by_bilibili/pages/home/home_page.dart';
 import 'package:demo_by_bilibili/pages/web_view_page.dart';
 import 'package:flutter/material.dart';
 
