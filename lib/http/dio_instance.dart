@@ -33,7 +33,7 @@ class DioInstance {
         sendTimeout: sendTimeout ?? _defaultTime,
         responseType: responseType,
         contentType: contentType);
-    _dio.interceptors.add(PrintLogIntercepter());
+    // _dio.interceptors.add(PrintLogIntercepter());
     _dio.interceptors.add(ResponseInterceptor());
   }
 

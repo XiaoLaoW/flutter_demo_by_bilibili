@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   dio: ^5.8.0+1
   provider: ^6.1.4
+  pull_to_refresh: ^2.0.0
+  webview_flutter: ^4.10.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -59,7 +61,16 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/images/
+    - assets/images/search.png
+    - assets/images/hot.png
+    - assets/icons/home.png
+    - assets/icons/home_grey.png
+    - assets/icons/hot_key.png
+    - assets/icons/hot_key_grey.png
+    - assets/icons/knowledge.png
+    - assets/icons/knowledge_grey.png
+    - assets/icons/personal.png
+    - assets/icons/personal_grey.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

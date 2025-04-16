@@ -6,24 +6,29 @@ import '../../repository/api.dart';
 import '../../repository/datas/home_banner_data.dart';
 import '../../repository/datas/home_list_data.dart';
 
-class HomeViewModel with ChangeNotifier{
+class HomeViewModel with ChangeNotifier {
   List<HomeBannerData>? bannerList;
-  List<HomeListItemData>? listData;
+  List<HomeListItemData>? listData = [];
   int page = 0;
 
-   Future getBanner() async {
-     // Response response = await DioInstance.instance.get(path:'banner/json');
-     // HomeBannerListData bannerData = HomeBannerListData.fromJson(response);
-     // if (bannerData.bannerList!= null){
-     //   bannerList = bannerData.bannerList;
-     // } else {
-     //   bannerList = [];
-     // }
-     print('-------getBanner');
-     List<HomeBannerData>? list = await Api.instance.getBanner();
-     bannerList = list ?? [];
-     print('-------getBanner done $list');
+  Future getBanner() async {
+    // Response response = await DioInstance.instance.get(path:'banner/json');
+    // HomeBannerListData bannerData = HomeBannerListData.fromJson(response);
+    // if (bannerData.bannerList!= null){
+    //   bannerList = bannerData.bannerList;
+    // } else {
+    //   bannerList = [];
+    // }
+    List<HomeBannerData>? list = await Api.instance.getBanner();
+    bannerList = list ?? [];
     notifyListeners();
+  }
+
+  Future initListData() async {
+    page = 0;
+    await getBanner();
+    await getHomeTopList();
+    await getHomeList();
   }
 
   Future getHomeList() async {
@@ -34,9 +39,16 @@ class HomeViewModel with ChangeNotifier{
     // } else {
     //   listData = [];
     // }
-    List<HomeListItemData>? list = await Api.instance.getHomeList(0);
-    listData = list ?? [];
+    List<HomeListItemData>? list = await Api.instance.getHomeList(page);
+    listData?.addAll(list ?? []);
     page++;
+    notifyListeners();
+  }
+
+  Future getHomeTopList() async {
+    List<HomeListItemData>? list = await Api.instance.getHomeTopList();
+    listData?.clear();
+    listData?.addAll(list ?? []);
     notifyListeners();
   }
 }

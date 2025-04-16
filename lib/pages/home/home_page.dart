@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../repository/datas/home_list_data.dart';
 import '../../route/route_utils.dart';
@@ -15,12 +16,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeViewModel viewModel = HomeViewModel();
+  RefreshController controller = RefreshController();
 
   @override
   void initState() {
     super.initState();
-    viewModel.getBanner();
-    viewModel.getHomeList();
+    viewModel.initListData();
   }
 
   @override
@@ -34,12 +35,29 @@ class _HomePageState extends State<HomePage> {
           title: Text('data'),
         ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _banner(),
-                _homeListView(),
-              ],
+          child: SmartRefresher(
+            controller: controller,
+            enablePullDown: true,
+            enablePullUp: true,
+            header: ClassicHeader(),
+            footer: ClassicFooter(),
+            onLoading: () async {
+              await viewModel.getHomeList().then((value){
+                controller.loadComplete();
+              });
+            },
+            onRefresh: () async {
+              await viewModel.initListData().then((value){
+                controller.refreshCompleted();
+              });
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _banner(),
+                  _homeListView(),
+                ],
+              ),
             ),
           ),
         ),
@@ -133,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                 width: 5,
               ),
               Text(
-                '置顶',
+                item?.type == 0 ? '' : '置顶',
                 style:
                     TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
               ),
