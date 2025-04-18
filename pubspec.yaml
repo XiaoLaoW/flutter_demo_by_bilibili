@@ -39,6 +39,7 @@ dependencies:
   provider: ^6.1.4
   pull_to_refresh: ^2.0.0
   webview_flutter: ^4.10.0
+  fluttertoast: ^8.2.12
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -63,6 +64,7 @@ flutter:
   assets:
     - assets/images/search.png
     - assets/images/hot.png
+    - assets/images/avatar.png
     - assets/icons/home.png
     - assets/icons/home_grey.png
     - assets/icons/hot_key.png

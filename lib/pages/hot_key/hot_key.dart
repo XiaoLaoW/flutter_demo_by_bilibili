@@ -8,6 +8,8 @@ import '../../route/route_utils.dart';
 import '../../route/routes.dart';
 import 'hot_key_vm.dart';
 
+typedef ItemTapCallback = void Function(String? link, [String? name]);
+
 class HotKeyPage extends StatefulWidget {
   @override
   _HotKeyPageState createState() => _HotKeyPageState();
@@ -60,7 +62,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
                   builder: (context, model, child) {
                     return _gridView(false,
                         SearchHotKeyList: model.SearchHotKeyList,
-                        itemTap: (link) {});
+                        itemTap: (link, [name]) {});
                   },
                 ),
                 Container(
@@ -77,10 +79,9 @@ class _HotKeyPageState extends State<HotKeyPage> {
                 Consumer<HotKeyViewModel>(
                   builder: (context, model, child) {
                     return _gridView(true, websiteList: model.websiteList,
-                        itemTap: (link) {
-                          RouteUtils.pushForNamed(context, RoutePath.webViewPage, arguments: {
-                        'url': link,
-                      });
+                        itemTap: (link, [name]) {
+                      RouteUtils.pushForNamed(context, RoutePath.webViewPage,
+                          arguments: {'url': link, 'title': name});
                     });
                   },
                 ),
@@ -96,7 +97,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
     bool? isWebsite, {
     List<CommonWebsiteData>? websiteList,
     List<SearchHotKeyData>? SearchHotKeyList,
-    required ValueChanged<String?> itemTap,
+    required ItemTapCallback itemTap,
   }) {
     return GridView.builder(
       padding: const EdgeInsets.all(10),
@@ -124,12 +125,11 @@ class _HotKeyPageState extends State<HotKeyPage> {
     );
   }
 
-  Widget _item(String? name,
-      {required ValueChanged<String?> itemTap, String? link}) {
+  Widget _item(String? name, {required ItemTapCallback itemTap, String? link}) {
     return GestureDetector(
       onTap: () {
         if (link != null) {
-          itemTap.call(link);
+          itemTap.call(link ?? '', name ?? '');
         } else {
           itemTap.call(name ?? '');
         }

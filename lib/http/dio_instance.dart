@@ -33,7 +33,7 @@ class DioInstance {
         sendTimeout: sendTimeout ?? _defaultTime,
         responseType: responseType,
         contentType: contentType);
-    // _dio.interceptors.add(PrintLogIntercepter());
+    _dio.interceptors.add(PrintLogIntercepter());
     _dio.interceptors.add(ResponseInterceptor());
   }
 
@@ -61,7 +61,7 @@ class DioInstance {
     Options? options,
     CancelToken? cancelToken,
   }) async {
-    return _dio.get(path,
+    return _dio.post(path,
         queryParameters: param,
         data: data,
         options: options ??

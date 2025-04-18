@@ -40,10 +40,11 @@ class _WebViewPageState extends State<WebViewPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     var map = ModalRoute.of(context)?.settings.arguments;
-    print('didChangeDependencies${ ModalRoute.of(context)?.settings.arguments}----${map is Map}');
+    print('didChangeDependencies${ ModalRoute.of(context)?.settings}----${map is Map}');
 
     if (map is Map) {
       url = map['url'] as String?;
+      title = map['title'] as String?;
 
       // 确保 URL 是有效的 URI
       if (url != null && url!.isNotEmpty) {

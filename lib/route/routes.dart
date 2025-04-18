@@ -1,7 +1,8 @@
-import 'package:demo_by_bilibili/pages/home/home_page.dart';
+import 'package:demo_by_bilibili/pages/auth/login_page.dart';
 import 'package:demo_by_bilibili/pages/web_view_page.dart';
 import 'package:flutter/material.dart';
 
+import '../pages/auth/register_page.dart';
 import '../pages/tab_page.dart';
 
 class Routes {
@@ -11,6 +12,10 @@ class Routes {
         return pageRoute(TabPage(), settings: settings);
       case RoutePath.webViewPage:
         return pageRoute(WebViewPage(), settings: settings);
+      case RoutePath.loginPage:
+        return pageRoute(LoginPage(), settings: settings);
+      case RoutePath.registerPage:
+        return pageRoute(RegisterPage(), settings: settings);
     }
     return pageRoute(
       Scaffold(
@@ -46,4 +51,6 @@ class RoutePath {
   //首页
   static const String tab = '/';
   static const String webViewPage = '/web_view_page';
+  static const String loginPage = '/login_page';
+  static const String registerPage = '/register_page';
 }

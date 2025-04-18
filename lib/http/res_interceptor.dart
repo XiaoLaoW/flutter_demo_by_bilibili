@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../utils/index.dart';
 import 'base_model.dart';
 
 class ResponseInterceptor extends InterceptorsWrapper {
@@ -11,11 +12,13 @@ class ResponseInterceptor extends InterceptorsWrapper {
         if(rsp.errorCode == 0) {
           if(rsp.data == null){
             handler.next(Response(requestOptions: response.requestOptions, data: true));
-          } else if (rsp.errorCode == -1001) {
-            handler.reject(DioException(requestOptions: response.requestOptions, message: '未登录'));
-          } else {
+          }  else {
             handler.next(Response(requestOptions: response.requestOptions, data: rsp.data));
           }
+        } else if (rsp.errorCode == -1001) {
+          handler.reject(DioException(requestOptions: response.requestOptions, message: '未登录'));
+        } else if (rsp.errorCode == -1) {
+          ToastHelper(rsp.errorMsg as String).showToast();
         }
       } catch (e) {
         handler.reject(DioException(requestOptions: response.requestOptions, message: e.toString()));

@@ -41,4 +41,10 @@ class Api {
     SearchHotKeyListData SearchHotKeyData = SearchHotKeyListData.fromJson(response.data);
     return SearchHotKeyData.SearchHotKeyList;
   }
+
+  Future register(String? name,String? password,String? repassword)async{
+    Response response = await DioInstance.instance.post(path:'user/register',param: {'username':name,'password':password,'repassword':repassword});
+    return true;
+  }
 }
+
