@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+
+import '../../route/route_utils.dart';
+import '../../utils/index.dart';
+import 'auth.vm.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,6 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  AuthViewModel? viewModel = AuthViewModel();
   TextEditingController? controllerUsername = TextEditingController();
   TextEditingController? controllerPassword = TextEditingController();
   bool pwdShow = false;
@@ -15,29 +21,40 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login Page'),
-      ),
-      backgroundColor: Colors.teal,
-      body: Column(
-        children: [
-          _formList(),
-          ElevatedButton(
-            onPressed: () {
-              (_formKey.currentState as FormState).validate();
-              print('Username: ${controllerUsername?.text}');
-              print('Password: ${controllerPassword?.text}');
-            },
-            child: Text('Login'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/register_page');
-            },
-            child: Text('register',style: TextStyle(color: Colors.white),),
-          ),
-        ],
+    return ChangeNotifierProvider<AuthViewModel>(
+      create: (_) => viewModel!,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Login Page'),
+        ),
+        backgroundColor: Colors.teal,
+        body: Column(
+          children: [
+            _formList(),
+            ElevatedButton(
+              onPressed: () {
+                if ((_formKey.currentState as FormState).validate()) {
+                  viewModel?.setLoginInfo(controllerUsername?.text,controllerPassword?.text);
+                  viewModel?.fetchLogin().then((value){
+                    if (value == true) {
+                      Fluttertoast.showToast(msg: '登录成功');
+                      RouteUtils.pushNamedAndRemoveUntil(context, '/');
+                    } else {
+                      ToastHelper('登录失败').showToast();
+                    }
+                  });
+                }
+              },
+              child: Text('Login'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/register_page');
+              },
+              child: Text('register',style: TextStyle(color: Colors.white),),
+            ),
+          ],
+        ),
       ),
     );
   }

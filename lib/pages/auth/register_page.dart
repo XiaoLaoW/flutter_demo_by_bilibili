@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../route/route_utils.dart';
+import '../../utils/index.dart';
 import 'auth.vm.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -125,7 +127,13 @@ class _RegisterPageState extends State<RegisterPage> {
               OutlinedButton(
                 onPressed: () {
                   if ((_formRegisterKey.currentState)?.validate() == true) {
-                    viewModel.fetchRegister();
+                    viewModel.fetchRegister().then((value){
+                      print('OutlinedButton--${value}');
+                      if (value == true) {
+                        ToastHelper('注册成功').showToast();
+                        RouteUtils.pop(context);
+                      }
+                    });
                   }
                 },
                 child: Text('Click Register'),

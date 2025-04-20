@@ -47,4 +47,10 @@ class RouteUtils {
     return Navigator.pushNamedAndRemoveUntil(context, name, (route) => false,
         arguments: arguments);
   }
+
+  static  pop (
+      BuildContext context,
+      ){
+    return Navigator.pop(context);
+  }
 }

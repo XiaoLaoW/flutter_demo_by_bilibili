@@ -2,6 +2,7 @@ import 'package:demo_by_bilibili/http/print_log_intercepter.dart';
 import 'package:demo_by_bilibili/http/res_interceptor.dart';
 import 'package:dio/dio.dart';
 
+import 'cookie_interceptor.dart';
 import 'http_method.dart';
 
 class DioInstance {
@@ -33,6 +34,7 @@ class DioInstance {
         sendTimeout: sendTimeout ?? _defaultTime,
         responseType: responseType,
         contentType: contentType);
+    _dio.interceptors.add(CookieInterceptor());
     _dio.interceptors.add(PrintLogIntercepter());
     _dio.interceptors.add(ResponseInterceptor());
   }

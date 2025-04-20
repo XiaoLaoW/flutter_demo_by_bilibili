@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../http/dio_instance.dart';
+import 'datas/auth_data.dart';
 import 'datas/common_website_data.dart';
 import 'datas/home_banner_data.dart';
 import 'datas/home_list_data.dart';
@@ -42,9 +43,14 @@ class Api {
     return SearchHotKeyData.SearchHotKeyList;
   }
 
-  Future register(String? name,String? password,String? repassword)async{
+  Future<dynamic> register(String? name,String? password,String? repassword)async{
     Response response = await DioInstance.instance.post(path:'user/register',param: {'username':name,'password':password,'repassword':repassword});
-    return true;
+    return response.data;
+  }
+
+  Future<AuthData> login(String? name,String? password)async{
+    Response response = await DioInstance.instance.post(path:'user/login',param: {'username':name,'password':password});
+    return AuthData.fromJson(response.data);
   }
 }
 
