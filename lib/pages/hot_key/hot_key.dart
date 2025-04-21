@@ -6,6 +6,7 @@ import '../../repository/datas/common_website_data.dart';
 import '../../repository/datas/search_hot_key_data.dart';
 import '../../route/route_utils.dart';
 import '../../route/routes.dart';
+import '../search/search_page.dart';
 import 'hot_key_vm.dart';
 
 typedef ItemTapCallback = void Function(String? link, [String? name]);
@@ -50,10 +51,15 @@ class _HotKeyPageState extends State<HotKeyPage> {
                       Expanded(
                         child: SizedBox(),
                       ),
-                      Image.asset(
-                        'assets/images/search.png',
-                        width: 20,
-                        height: 20,
+                      GestureDetector(
+                        onTap: () {
+                          RouteUtils.push(context, SearchPage());
+                        },
+                        child: Image.asset(
+                          'assets/images/search.png',
+                          width: 20,
+                          height: 20,
+                        ),
                       ),
                     ],
                   ),
@@ -62,7 +68,9 @@ class _HotKeyPageState extends State<HotKeyPage> {
                   builder: (context, model, child) {
                     return _gridView(false,
                         SearchHotKeyList: model.SearchHotKeyList,
-                        itemTap: (link, [name]) {});
+                        itemTap: (link, [name]) {
+                      RouteUtils.push(context, SearchPage(keyword: name ?? ''));
+                        });
                   },
                 ),
                 Container(

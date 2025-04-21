@@ -65,6 +65,8 @@ flutter:
   assets:
     - assets/images/search.png
     - assets/images/hot.png
+    - assets/images/collect.png
+    - assets/images/collect_select.png
     - assets/images/avatar.png
     - assets/icons/home.png
     - assets/icons/home_grey.png

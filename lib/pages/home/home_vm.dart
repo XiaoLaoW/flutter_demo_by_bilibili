@@ -51,4 +51,17 @@ class HomeViewModel with ChangeNotifier {
     listData?.addAll(list ?? []);
     notifyListeners();
   }
+  Future handleCollect(int id,int index,bool? isCollect) async{
+    bool? result = false;
+    if (isCollect == true) {
+       result = await Api.instance.unCollect(id);
+    } else {
+       result = await Api.instance.collect(id);
+    }
+    print('result------------$result');
+    if (result == true) {
+      listData?[index].collect = !isCollect!;
+      notifyListeners();
+    }
+  }
 }

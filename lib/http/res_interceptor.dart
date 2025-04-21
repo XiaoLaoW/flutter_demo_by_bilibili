@@ -11,7 +11,7 @@ class ResponseInterceptor extends InterceptorsWrapper {
         var rsp = BaseModel.fromJson(response.data);
         if(rsp.errorCode == 0) {
           if(rsp.data == null){
-            handler.next(Response(requestOptions: response.requestOptions, data: false));
+            handler.next(Response(requestOptions: response.requestOptions, data: true));
           }  else {
             handler.next(Response(requestOptions: response.requestOptions, data: rsp.data));
           }

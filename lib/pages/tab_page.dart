@@ -44,7 +44,7 @@ class _TabPageState extends State<TabPage> {
     ];
   }
 
-  int currentIndex = 1;
+  int currentIndex = 0;
 
   @override
   void initState() {

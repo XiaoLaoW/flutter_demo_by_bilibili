@@ -391,6 +391,10 @@ HomeListItemData copyWith({  bool? adminAdd,
   num? get visible => _visible;
   num? get zan => _zan;
 
+  set collect(bool? value) {
+    _collect = value;
+  }
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['adminAdd'] = _adminAdd;

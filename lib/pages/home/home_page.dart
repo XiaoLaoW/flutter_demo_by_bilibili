@@ -97,14 +97,14 @@ class _HomePageState extends State<HomePage> {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          return _listView(vm.listData?[index]);
+          return _listView(vm.listData?[index],index);
         },
         itemCount: vm.listData?.length ?? 0,
       );
     });
   }
 
-  Widget _listView(HomeListItemData? item) {
+  Widget _listView(HomeListItemData? item,int index) {
     var name = item?.author ?? '';
     if (name.isEmpty) {
       name = item?.shareUser ?? '';
@@ -167,11 +167,16 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: SizedBox(),
               ),
-              Image.asset(
-                'assets/images/hot.png',
-                width: 30,
-                height: 30,
-              )
+              GestureDetector(
+                onTap: () {
+                  viewModel.handleCollect(item?.id as int,index,item?.collect);
+                },
+                child:Image.asset( item?.collect == true ? 'assets/images/collect_select.png' :
+                  'assets/images/collect.png',
+                  width: 30,
+                  height: 30,
+                ),
+              ),
             ],
           )
         ],

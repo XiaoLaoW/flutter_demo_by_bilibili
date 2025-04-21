@@ -27,7 +27,7 @@ class AuthViewModel with ChangeNotifier{
       AuthData data = await Api.instance.login(
           loginInfo.name, loginInfo.password);
       if (data.username != null && data.username?.isNotEmpty == true) {
-        SpUtils.saveString(Constants.username, data.username!);
+        SpUtils.saveString(Constants.USER_NAME, data.username!);
         return true;
       } else {
         return false;

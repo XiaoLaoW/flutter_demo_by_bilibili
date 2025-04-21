@@ -1,5 +1,7 @@
+import 'package:demo_by_bilibili/pages/personal/personal_vm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../route/route_utils.dart';
 import '../auth/login_page.dart';
@@ -12,14 +14,15 @@ class PersonalPage extends StatefulWidget {
 }
 
 class _PersonalPageState extends State<PersonalPage> {
-  final List<Map<String, String>> list = [
+  PersonalVM personalVM = PersonalVM();
+  List<Map<String, String>> list = [
     {
       "title": "我的收藏",
       "path": "",
     },
     {
       "title": "检查更新",
-      "path": "",
+      "id": "1",
     },
     {
       "title": "关于我们",
@@ -28,23 +31,38 @@ class _PersonalPageState extends State<PersonalPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    personalVM.initData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            _personalPageHeader(() {
-              RouteUtils.push(context, LoginPage());
-            }),
-            Expanded(
-              child: _personalPageList(),
-            ),
-          ],
-        ),
-      ),
+    return ChangeNotifierProvider(
+      create: (_) => personalVM,
+      child: Consumer<PersonalVM>(builder: (context, vm, child) {
+        List<Map<String, String>> currentList = List.from(list);
+        if (vm.shouldLogin == false) {
+          currentList.add({"title": "退出登录", "id": "2"});
+        }
+        return Scaffold(
+          body: Column(
+            children: [
+              _personalPageHeader(vm, () {
+                if (vm.shouldLogin == false) return;
+                RouteUtils.push(context, LoginPage());
+              }),
+              Expanded(
+                child: _personalPageList(currentList),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
-  Widget _personalPageHeader(void Function() onTap) {
+
+  Widget _personalPageHeader(PersonalVM vm, void Function() onTap) {
     return Container(
       width: double.infinity,
       height: 250,
@@ -54,41 +72,51 @@ class _PersonalPageState extends State<PersonalPage> {
       alignment: Alignment.center,
       child: GestureDetector(
         onTap: onTap,
-        child:Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(35),
+        child: Consumer<PersonalVM>(
+          builder: (context, vm, child) {
+            return SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(35),
+                    ),
+                    child: Image.asset('assets/images/avatar.png',
+                        width: 70, height: 70, fit: BoxFit.fill),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    vm.username ?? '',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ],
               ),
-              child: Image.asset('assets/images/avatar.png',
-                  width: 70, height: 70, fit: BoxFit.fill),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(
-              "未登录",
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _personalPageList() {
-    return ListView.builder(
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: GestureDetector(
-            onTap: () {
-              _handleItemTap(index);
-            },
-            child:_personalPageListItem(list[index]),
-          ),
+  Widget _personalPageList(List<Map<String, String>> currentList) {
+    return Consumer<PersonalVM>(
+      builder: (context, vm, child) {
+        return ListView.builder(
+          itemCount: currentList.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: GestureDetector(
+                onTap: () {
+                  _handleItemTap(currentList[index]);
+                },
+                child: _personalPageListItem(currentList[index]),
+              ),
+            );
+          },
         );
       },
     );
@@ -117,7 +145,22 @@ class _PersonalPageState extends State<PersonalPage> {
     );
   }
 
-  void _handleItemTap(int index) {
-    print(list[index]["title"]);
+  void _handleItemTap(Map<String,String> item) {
+    print(item["id"]?.isNotEmpty);
+    if (item["id"]?.isNotEmpty == true) {
+      switch (item["id"]) {
+        case "1":
+          // 检查更新
+          break;
+        case "2":
+          // 退出登录
+          personalVM.logout();
+          break;
+        default:
+          break;
+      }
+    } else {
+      print(item);
+    }
   }
 }
