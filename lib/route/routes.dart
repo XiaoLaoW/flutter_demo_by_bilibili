@@ -1,8 +1,11 @@
 import 'package:demo_by_bilibili/pages/auth/login_page.dart';
-import 'package:demo_by_bilibili/pages/web_view_page.dart';
 import 'package:flutter/material.dart';
 
+import '../common_ui/web/webview_page.dart';
+import '../common_ui/web/webview_widget.dart';
+import '../pages/about_us/about_us.dart';
 import '../pages/auth/register_page.dart';
+import '../pages/collection/my_collection.dart';
 import '../pages/knowledge/detail/knowledge_detail_tab_page.dart';
 import '../pages/tab_page.dart';
 
@@ -12,7 +15,7 @@ class Routes {
       case RoutePath.tab:
         return pageRoute(TabPage(), settings: settings);
       case RoutePath.webViewPage:
-        return pageRoute(WebViewPage(), settings: settings);
+        return pageRoute(WebViewPage(loadResource:"",webViewType: WebViewWidgetType.URL,), settings: settings);
       case RoutePath.loginPage:
         return pageRoute(LoginPage(), settings: settings);
       case RoutePath.registerPage:
@@ -21,6 +24,11 @@ class Routes {
         return pageRoute(KnowledgeDetailTabPage(), settings: settings);
       case RoutePath.searchPage:
         return pageRoute(KnowledgeDetailTabPage(), settings: settings);
+        case RoutePath.myCollectionPage:
+        return pageRoute(MyCollectionPage(), settings: settings);
+        case RoutePath.aboutUsPage:
+          return pageRoute(AboutUsPage(), settings: settings);
+
     }
     return pageRoute(
       Scaffold(
@@ -60,4 +68,6 @@ class RoutePath {
   static const String registerPage = '/register_page';
   static const String knowledgeDetailPage = '/knowledge_detail_page';
   static const String searchPage = '/search_page';
+  static const String myCollectionPage = '/my_collection';
+  static const String aboutUsPage = '/about_us_page';
 }

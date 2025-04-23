@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../../common_ui/web/webview_page.dart';
+import '../../../common_ui/web/webview_widget.dart';
 import '../../../repository/datas/knowledge_detail_list_data.dart';
+import '../../../route/route_utils.dart';
 import 'knowledge_detail_vm.dart';
 
 class KnowledgeTabChildPage extends StatefulWidget {
@@ -68,33 +71,45 @@ class _KnowledgeTabChildPageState extends State<KnowledgeTabChildPage> {
   }
 
   Widget _item(detailListDatas item) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.fromBorderSide(
-            BorderSide(color: Colors.grey[300]!, width: 1)),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(item.chapterName ?? ''),
-              Text(item.niceDate ?? ''),
-            ],
-          ),
-          Text(item.title ?? ''),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('title'),
-              Text(item.author ?? ''),
-            ],
-          ),
-        ],
+    return GestureDetector(
+      onTap: () {
+        RouteUtils.push(
+          context,
+          WebViewPage(
+              loadResource: item.link ?? "",
+              webViewType: WebViewWidgetType.URL,
+              title: item.title ?? "",
+              showTitle: true),
+        );
+      },
+      child:Container(
+        width: double.infinity,
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          border: Border.fromBorderSide(
+              BorderSide(color: Colors.grey[300]!, width: 1)),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(item.chapterName ?? ''),
+                Text(item.niceDate ?? ''),
+              ],
+            ),
+            Text(item.title ?? ''),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('title'),
+                Text(item.author ?? ''),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

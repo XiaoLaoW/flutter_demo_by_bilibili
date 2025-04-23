@@ -2,9 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 // import '../../http/dio_instance.dart';
+import '../../common_ui/loading.dart';
 import '../../repository/api.dart';
 import '../../repository/datas/home_banner_data.dart';
 import '../../repository/datas/home_list_data.dart';
+import '../../utils/index.dart';
 
 class HomeViewModel with ChangeNotifier {
   List<HomeBannerData>? bannerList;
@@ -26,9 +28,11 @@ class HomeViewModel with ChangeNotifier {
 
   Future initListData() async {
     page = 0;
+    Loading.showLoading();
     await getBanner();
     await getHomeTopList();
     await getHomeList();
+    Loading.hideLoading();
   }
 
   Future getHomeList() async {
@@ -58,10 +62,14 @@ class HomeViewModel with ChangeNotifier {
     } else {
        result = await Api.instance.collect(id);
     }
-    print('result------------$result');
     if (result == true) {
       listData?[index].collect = !isCollect!;
       notifyListeners();
+      if(isCollect == true) {
+        ToastHelper.instance.showToast('取消成功');
+      } else {
+        ToastHelper.instance.showToast('收藏成功');
+      }
     }
   }
 }

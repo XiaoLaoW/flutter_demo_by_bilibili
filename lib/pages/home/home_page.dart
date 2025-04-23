@@ -4,6 +4,10 @@ import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../common_ui/collection_item.dart';
+import '../../common_ui/loading.dart';
+import '../../common_ui/web/webview_page.dart';
+import '../../common_ui/web/webview_widget.dart';
 import '../../repository/datas/home_list_data.dart';
 import '../../route/route_utils.dart';
 import '../../route/routes.dart';
@@ -42,12 +46,12 @@ class _HomePageState extends State<HomePage> {
             header: ClassicHeader(),
             footer: ClassicFooter(),
             onLoading: () async {
-              await viewModel.getHomeList().then((value){
+              await viewModel.getHomeList().then((value) {
                 controller.loadComplete();
               });
             },
             onRefresh: () async {
-              await viewModel.initListData().then((value){
+              await viewModel.initListData().then((value) {
                 controller.refreshCompleted();
               });
             },
@@ -74,11 +78,23 @@ class _HomePageState extends State<HomePage> {
           child: Swiper(
             itemCount: vm.bannerList?.length ?? 0,
             itemBuilder: (context, index) {
-              return Container(
-                height: 150,
-                color: Colors.lightBlue,
-                child: Image.network(vm.bannerList?[index]?.imagePath ?? '',
-                    fit: BoxFit.fill),
+              return GestureDetector(
+                onTap: () {
+                  RouteUtils.push(
+                    context,
+                    WebViewPage(
+                        loadResource: vm.bannerList?[index]?.url ?? '',
+                        webViewType: WebViewWidgetType.URL,
+                        title: vm.bannerList?[index]?.title,
+                        showTitle: true),
+                  );
+                },
+                child: Container(
+                  height: 150,
+                  color: Colors.lightBlue,
+                  child: Image.network(vm.bannerList?[index]?.imagePath ?? '',
+                      fit: BoxFit.fill),
+                ),
               );
             },
             indicatorLayout: PageIndicatorLayout.COLOR,
@@ -97,105 +113,49 @@ class _HomePageState extends State<HomePage> {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          return _listView(vm.listData?[index],index);
+          return _listView(vm.listData?[index], index);
         },
         itemCount: vm.listData?.length ?? 0,
       );
     });
   }
 
-  Widget _listView(HomeListItemData? item,int index) {
+  Widget _listView(HomeListItemData? item, int index) {
     var name = item?.author ?? '';
     if (name.isEmpty) {
       name = item?.shareUser ?? '';
     }
-    return Container(
-      margin: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.black12,
-          width: 0.5,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(6),
-        ),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Image.network(
-                  'https://t7.baidu.com/it/u=2621658848,3952322712&fm=193&f=GIF',
-                  width: 30,
-                  height: 30,
-                  fit: BoxFit.fill,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 5),
-                child: Text(
-                  name,
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              Expanded(
-                child: SizedBox(),
-              ),
-              Text(item?.niceShareDate ?? '',
-                  style: TextStyle(color: Colors.black)),
-              SizedBox(
-                width: 5,
-              ),
-              Text(
-                item?.type == 0 ? '' : '置顶',
-                style:
-                    TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          _listItemView(item?.title ?? ''),
-          Row(
-            children: [
-              Text(
-                item?.superChapterName ?? '',
-                style: TextStyle(color: Colors.green, fontSize: 12),
-              ),
-              Expanded(
-                child: SizedBox(),
-              ),
-              GestureDetector(
-                onTap: () {
-                  viewModel.handleCollect(item?.id as int,index,item?.collect);
-                },
-                child:Image.asset( item?.collect == true ? 'assets/images/collect_select.png' :
-                  'assets/images/collect.png',
-                  width: 30,
-                  height: 30,
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _listItemView(String title) {
     return GestureDetector(
       onTap: () {
-        RouteUtils.pushForNamed(context, RoutePath.webViewPage,
-            arguments: {"name": "使用路由传值"});
-        // Navigator.pushNamed(context, RoutePath.webViewPage);
-        // Navigator.push(context,MaterialPageRoute(builder: (context){
-        //   return WebViewPage(title:'首页跳转');
-        // }),);
+        RouteUtils.push(
+          context,
+          WebViewPage(
+            loadResource: item?.link ?? '',
+            webViewType: WebViewWidgetType.URL,
+            title: item?.title,
+            showTitle: true,
+          ),
+        );
       },
-      child: Container(
-        child: Text(title, style: TextStyle(color: Colors.black, fontSize: 15)),
+      child: CollectionItem(
+        leftTop: name,
+        date: item?.niceShareDate ?? '',
+        avatar: 'https://t7.baidu.com/it/u=2621658848,3952322712&fm=193&f=GIF',
+        content: item?.title ?? '',
+        rightBottom: GestureDetector(
+          onTap: () {
+            viewModel.handleCollect(
+                item?.id as int, index, item?.collect);
+          },
+          child: Image.asset(
+            item?.collect == true
+                ? 'assets/images/collect_select.png'
+                : 'assets/images/collect.png',
+            width: 30,
+            height: 30,
+          ),
+        ),
+        leftBottom: item?.superChapterName ?? '',
       ),
     );
   }

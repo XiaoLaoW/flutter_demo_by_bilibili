@@ -130,7 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     viewModel.fetchRegister().then((value){
                       print('OutlinedButton--${value}');
                       if (value == true) {
-                        ToastHelper('注册成功').showToast();
+                        ToastHelper.instance.showToast('注册成功');
                         RouteUtils.pop(context);
                       }
                     });

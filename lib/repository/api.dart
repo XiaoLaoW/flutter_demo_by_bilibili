@@ -7,6 +7,8 @@ import 'datas/home_banner_data.dart';
 import 'datas/home_list_data.dart';
 import 'datas/knowledge_data.dart';
 import 'datas/knowledge_detail_list_data.dart';
+import 'datas/my_collection_data.dart';
+import 'datas/search_data.dart';
 import 'datas/search_hot_key_data.dart';
 
 
@@ -80,6 +82,23 @@ class Api {
     Response response = await DioInstance.instance.get(path: 'article/list/$page/json?cid=$cid');
     KnowledgeDetailListData data = KnowledgeDetailListData.fromJson(response.data);
     return data.datas;
+  }
+
+  Future<List<searchListData>?> fetchSearchData(String? key,int? page,[pageSize=10])async{
+    Response response = await DioInstance.instance.post(path:'article/query/$page/json',param: {'k':key,'page_size':pageSize});
+    SearchData data = SearchData.fromJson(response.data);
+    return data.datas;
+  }
+
+  Future<MyCollectionData> fetchCollectList(int page)async{
+    Response response = await DioInstance.instance.get(path:'lg/collect/list/$page/json');
+    MyCollectionData data = MyCollectionData.fromJson(response.data);
+    return data;
+  }
+
+  Future<bool?> cancelCollect(int id)async{
+    Response response = await DioInstance.instance.post(path:'lg/uncollect_originId/$id/json');
+    return boolCallback(response.data);
   }
 
   bool? boolCallback(dynamic data) {

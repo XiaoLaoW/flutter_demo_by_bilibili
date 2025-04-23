@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../common_ui/web/webview_page.dart';
+import '../../common_ui/web/webview_widget.dart';
 import '../../repository/datas/common_website_data.dart';
 import '../../repository/datas/search_hot_key_data.dart';
 import '../../route/route_utils.dart';
@@ -69,8 +71,9 @@ class _HotKeyPageState extends State<HotKeyPage> {
                     return _gridView(false,
                         SearchHotKeyList: model.SearchHotKeyList,
                         itemTap: (link, [name]) {
-                      RouteUtils.push(context, SearchPage(keyword: name ?? ''));
-                        });
+                      print('Hotkey----$name');
+                          RouteUtils.push(context, SearchPage(keyword: name ?? ''));
+                    });
                   },
                 ),
                 Container(
@@ -88,8 +91,14 @@ class _HotKeyPageState extends State<HotKeyPage> {
                   builder: (context, model, child) {
                     return _gridView(true, websiteList: model.websiteList,
                         itemTap: (link, [name]) {
-                      RouteUtils.pushForNamed(context, RoutePath.webViewPage,
-                          arguments: {'url': link, 'title': name});
+                      RouteUtils.push(
+                        context,
+                        WebViewPage(
+                            loadResource: link ?? '',
+                            webViewType: WebViewWidgetType.URL,
+                            title: name,
+                            showTitle: true),
+                      );
                     });
                   },
                 ),
@@ -137,9 +146,9 @@ class _HotKeyPageState extends State<HotKeyPage> {
     return GestureDetector(
       onTap: () {
         if (link != null) {
-          itemTap.call(link ?? '', name ?? '');
+          itemTap.call(link ?? '');
         } else {
-          itemTap.call(name ?? '');
+          itemTap.call(name ?? '',name ?? '');
         }
       },
       child: Container(

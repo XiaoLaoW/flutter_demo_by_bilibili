@@ -35,7 +35,7 @@ class DioInstance {
         responseType: responseType,
         contentType: contentType);
     _dio.interceptors.add(CookieInterceptor());
-    // _dio.interceptors.add(PrintLogIntercepter());
+    _dio.interceptors.add(PrintLogIntercepter());
     _dio.interceptors.add(ResponseInterceptor());
   }
 

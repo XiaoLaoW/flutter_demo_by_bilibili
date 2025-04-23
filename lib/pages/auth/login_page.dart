@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                       Fluttertoast.showToast(msg: '登录成功');
                       RouteUtils.pushNamedAndRemoveUntil(context, '/');
                     } else {
-                      ToastHelper('登录失败').showToast();
+                      ToastHelper.instance.showToast('登录失败');
                     }
                   });
                 }

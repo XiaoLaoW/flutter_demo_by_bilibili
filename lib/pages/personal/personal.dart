@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../route/route_utils.dart';
+import '../../route/routes.dart';
 import '../auth/login_page.dart';
 
 class PersonalPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _PersonalPageState extends State<PersonalPage> {
   List<Map<String, String>> list = [
     {
       "title": "我的收藏",
-      "path": "",
+      "path": "/my_collection",
     },
     {
       "title": "检查更新",
@@ -26,7 +27,7 @@ class _PersonalPageState extends State<PersonalPage> {
     },
     {
       "title": "关于我们",
-      "path": "",
+      "path": "/about_us_page",
     }
   ];
 
@@ -160,7 +161,7 @@ class _PersonalPageState extends State<PersonalPage> {
           break;
       }
     } else {
-      print(item);
+      RouteUtils.pushForNamed(context,'${item['path']}');
     }
   }
 }
